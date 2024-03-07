@@ -14,4 +14,11 @@ public class MainClassTest extends MainClass {
         if (getClassNumber() < number)
             Assert.fail("Метод вернул число меньше 45");
     }
+
+    @Test
+    public void testGetClassString() {
+        String text = "Hello";
+        if (!getClassString().contains(text))
+            Assert.fail("Не содержит текст " + text);
+    }
 }
