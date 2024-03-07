@@ -8,4 +8,10 @@ public class MainClassTest extends MainClass {
         if (getLocalNumber() != number)
             Assert.fail("Метод не вернул число 14" );
     }
+    @Test
+    public void testGetClassNumber() {
+        int number = 45;
+        if (getClassNumber() < number)
+            Assert.fail("Метод вернул число меньше 45");
+    }
 }
