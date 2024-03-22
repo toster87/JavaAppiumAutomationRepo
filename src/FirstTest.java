@@ -132,7 +132,38 @@ public class FirstTest {
                 "Java (programming language)",
                 title);
     }
-    
+
+    @Test
+    public void testSearchInputText() {
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "Cannot find skip button",
+                10);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Cannot find 'Search Wikipedia' input",
+                5);
+
+        WebElement text_element = waitForElementPresent(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Cannot find input text",
+                10);
+
+        String inputText = text_element.getAttribute("text");
+        assertElementHasText(
+                "Cannot find input text",
+                "Search Wikipedia",
+                inputText);
+    }
+
+    private void assertElementHasText(String error_message, String value, String text) {
+        Assert.assertEquals(
+                error_message,
+                value,
+                text);
+    }
+
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
