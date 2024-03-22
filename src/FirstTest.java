@@ -157,6 +157,36 @@ public class FirstTest {
                 inputText);
     }
 
+    @Test
+    public void testCLearSearchResults(){
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "Cannot find skip button",
+                10);
+        
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_container"),
+                "Java",
+                "Cannot find search input",
+                5);
+
+        waitForElementPresent(
+                By.id("org.wikipedia:id/page_list_item_title"),
+                "Cannot find search results",
+                15);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "Cannot find X to cancel search",
+                10);
+
+        waitForElementNotPresent(
+                By.id("org.wikipedia:id/page_list_item_title"),
+                "Search results are still present on page",
+                5);
+    }
+
     private void assertElementHasText(String error_message, String value, String text) {
         Assert.assertEquals(
                 error_message,
