@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.List;
 
 public class FirstTest {
     private AppiumDriver driver;
@@ -158,13 +159,13 @@ public class FirstTest {
     }
 
     @Test
-    public void testCLearSearchResults(){
-
+    public void testCLearSearchResults()
+    {
         waitForElementAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
                 "Cannot find skip button",
                 10);
-        
+
         waitForElementAndSendKeys(
                 By.id("org.wikipedia:id/search_container"),
                 "Java",
@@ -186,6 +187,49 @@ public class FirstTest {
                 "Search results are still present on page",
                 5);
     }
+
+    @Test
+    public void testSearchResultsHaveText()
+    {
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "Cannot find skip button",
+                10);
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_container"),
+                "Java",
+                "Cannot find search input",
+                5);
+        
+        verifySearchResultsHaveText("Java");
+    }
+
+    public void verifySearchResultsHaveText(String text){
+        boolean found = false;
+        List<WebElement> searchResults = findElements(By.id("org.wikipedia:id/page_list_item_title"));
+            for (WebElement webElement : searchResults) {
+                if (webElement.getText().contains(text)) {
+                    found = true;
+                    break;
+                }
+            }
+                if (!found)
+                    Assert.fail("Search results have no text " + text);
+    }
+
+
+    private List<WebElement> waitForElementsPresent(By by, String error_message, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(error_message + "\n");
+        return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
+    }
+
+
+    private List<WebElement> findElements(By by) {
+        return driver.findElements(by);
+    }
+
 
     private void assertElementHasText(String error_message, String value, String text) {
         Assert.assertEquals(
