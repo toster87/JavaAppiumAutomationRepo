@@ -515,6 +515,161 @@ public class FirstTest {
     }
 
 
+    @Test
+    public void saveTwoArticlesToMyList() {
+
+        String name_of_folder = "Learning programming";
+
+        //First article
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "Cannot find skip button on start page",
+                10);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Cannot find 'Search Wikipedia' input",
+                5);
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_container"),
+                "Java",
+                "Cannot find search input",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//*[@text='Object-oriented programming language']"),
+                "Cannot find 'Object-oriented programming language' topic searching by 'Java'",
+                15);
+
+        waitForElementPresent(
+                By.xpath("//*[@text='Java (programming language)']"),
+                "Cannot find article title 'Java (programming language)'",
+                30);
+
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_save"),
+                "Cannot find button to save article",
+                10);
+
+        waitForElementAndClick(
+                By.xpath("//android.widget.Button[@text='Add to list']"),
+                "Cannot find button Add to list article",
+                10);
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/text_input"),
+                name_of_folder,
+                "Cannot put text into articles folder input",
+                10);
+
+        waitForElementAndClick(
+                By.xpath("//*[@text='OK']"),
+                "Cannot find OK button",
+                10);
+
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
+                "Cannot close article",
+                5);
+
+
+        //Second article
+        waitForElementAndClear(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Cannot find search input",
+                5);
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Appium",
+                "Cannot put text into search input",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//*[@text='Automation for Apps']"),
+                "Cannot find 'Automation for Apps' topic searching by 'Appium'",
+                15);
+
+        waitForElementPresent(
+                By.xpath("//android.widget.TextView[@text='Automation for Apps']"),
+                "Cannot find description title in article",
+                10);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_save"),
+                "Cannot find button to save article",
+                15);
+
+        waitForElementAndClick(
+                By.xpath("//android.widget.Button[@text='Add to list']"),
+                "Cannot find button Add to list article",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//*[@text='" + name_of_folder + "']"),
+                "Cannot find created folder",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
+                "Cannot close article",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
+                "Cannot close article",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//android.widget.FrameLayout[@content-desc='Saved']"),
+                "Cannot find navigation button to my list",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//android.widget.Button[@text='Not now']"),
+                "Cannot close Sync reading lists message",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//*[@text='" + name_of_folder + "']"),
+                "Cannot find created folder",
+                5);
+
+        waitForElementPresent(
+                By.xpath("//*[@text='Java (programming language)']"),
+                "Cannot find saved article 'Java'",
+                5);
+
+        waitForElementPresent(
+                By.xpath("//*[@text='Automation for Apps']"),
+                "Cannot find saved article 'Appium'",
+                5);
+
+        swipeElementToLeft(
+                By.xpath("//*[@text='Java (programming language)']"),
+                "Cannot find saved article");
+
+        waitForElementNotPresent(
+                By.xpath("//*[@text='Java (programming language)']"),
+                "Cannot delete saved article",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//*[@text='Automation for Apps']"),
+                "Cannot find saved article 'Appium'",
+                5);
+
+        waitForElementPresent(
+                By.xpath("//android.widget.TextView[@text='Automation for Apps']"),
+                "Cannot find description title in article",
+                30);
+    }
+
+
+
+
     private void assertElementHasText(String error_message, String value, String text) {
         Assert.assertEquals(
                 error_message,
