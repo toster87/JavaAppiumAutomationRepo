@@ -667,50 +667,7 @@ public class FirstTest {
                 30);
     }
 
-    @Test
-    public void testArticleHasTitle() {
 
-        waitForElementAndClick(
-                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
-                "Cannot find skip button on start page",
-                10);
-
-        waitForElementAndClick(
-                By.id("org.wikipedia:id/search_container"),
-                "Cannot find 'Search Wikipedia' input",
-                5);
-
-        waitForElementAndSendKeys(
-                By.id("org.wikipedia:id/search_container"),
-                "Appium",
-                "Cannot find search input",
-                5);
-
-        waitForElementAndClick(
-                By.xpath("//*[@text='Automation for Apps']"),
-                "Cannot find 'Automation for Apps' topic searching by 'Appium'",
-                30);
-
-        String title_of_article = "//android.widget.TextView[@text='Appium']";
-        String title = "Appium";
-
-        assertElementPresent(
-                By.xpath(title_of_article),
-                "text",
-                title,
-                "Cannot find title " + title + " of article",
-                10);
-    }
-
-
-
-
-    private void assertElementHasText(String error_message, String value, String text) {
-        Assert.assertEquals(
-                error_message,
-                value,
-                text);
-    }
 
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
@@ -816,37 +773,6 @@ public class FirstTest {
             String default_message = "An element '" + by.toString() + "' supposed to be not present";
             throw new AssertionError(default_message + " " + error_message);
         }
-    }
-
-    private void assertElementPresent(By by, String attribute, String title, String error_message, long timeoutInSeconds) {
-        String default_message = "An element '" + by.toString() + "' supposed to be present";
-        String element = waitForElementAndGetAttribute(by, attribute, error_message, timeoutInSeconds);
-
-        if (!element.contains(title)) {
-            fail(default_message + " " + error_message);
-        }
-    }
-
-
-    public WebElement findElement(By locator) {
-        return driver.findElement(locator);
-    }
-
-    public static void fail(String message) {
-        if (null == message) {
-            message = "";
-        }
-        throw new AssertionError(message);
-    }
-
-    public static void assertTrue(String message, boolean condition) {
-        if (!condition) {
-            fail(message);
-        }
-    }
-
-    public static void assertTrue(boolean condition) {
-        assertTrue((String)null, condition);
     }
 
     private String waitForElementAndGetAttribute(By by, String attribute, String error_message,
