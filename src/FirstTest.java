@@ -429,6 +429,8 @@ public class FirstTest {
     @Test
     public void testChangeScreenOrientationOnSearchResults() {
 
+        rotateToPortrait(true);
+
         String search_line = "Java";
 
         waitForElementAndClick(
@@ -453,14 +455,14 @@ public class FirstTest {
                 30);
 
         String title_before_rotation = String.valueOf(waitForElementPresent(
-                By.xpath("//android.view.View[@content-desc=\"Java (programming language)\"]"),
+                By.xpath("//android.widget.TextView[@text='Java (programming language)']"),
                 "Cannot find article title",
                 30));
 
         driver.rotate(ScreenOrientation.LANDSCAPE);
 
         String title_after_rotation = String.valueOf(waitForElementPresent(
-                By.xpath("//android.view.View[@content-desc=\"Java (programming language)\"]"),
+                By.xpath("//android.widget.TextView[@text='Java (programming language)']"),
                 "Cannot find article title",
                 30));
 
@@ -472,7 +474,7 @@ public class FirstTest {
         driver.rotate(ScreenOrientation.PORTRAIT);
 
         String title_after_second_rotation = String.valueOf(waitForElementPresent(
-                By.xpath("//android.view.View[@content-desc=\"Java (programming language)\"]"),
+                By.xpath("//android.widget.TextView[@text='Java (programming language)']"),
                 "Cannot find article title",
                 30));
 
@@ -852,6 +854,16 @@ public class FirstTest {
 
     public static void assertTrue(boolean condition) {
         assertTrue((String)null, condition);
+    }
+
+    public void rotateToPortrait(boolean portrait){
+
+        driver.getOrientation().toString();
+        if (portrait) {
+            driver.rotate(ScreenOrientation.PORTRAIT);
+        } else {
+            driver.rotate(ScreenOrientation.LANDSCAPE);
+        }
     }
 }
 
