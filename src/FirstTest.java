@@ -1,6 +1,7 @@
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
+import junit.framework.AssertionFailedError;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -162,8 +163,7 @@ public class FirstTest {
     }
 
     @Test
-    public void testCLearSearchResults()
-    {
+    public void testCLearSearchResults() {
         waitForElementAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
                 "Cannot find skip button",
@@ -192,8 +192,7 @@ public class FirstTest {
     }
 
     @Test
-    public void testSearchResultsHaveText()
-    {
+    public void testSearchResultsHaveText() {
         waitForElementAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
                 "Cannot find skip button",
@@ -208,17 +207,17 @@ public class FirstTest {
         verifySearchResultsHaveText("Java");
     }
 
-    public void verifySearchResultsHaveText(String text){
+    public void verifySearchResultsHaveText(String text) {
         boolean found = false;
         List<WebElement> searchResults = findElements(By.id("org.wikipedia:id/page_list_item_title"));
-            for (WebElement webElement : searchResults) {
-                if (webElement.getText().contains(text)) {
-                    found = true;
-                    break;
-                }
+        for (WebElement webElement : searchResults) {
+            if (webElement.getText().contains(text)) {
+                found = true;
+                break;
             }
-                if (!found)
-                    Assert.fail("Search results have no text " + text);
+        }
+        if (!found)
+            Assert.fail("Search results have no text " + text);
     }
 
 
@@ -386,6 +385,7 @@ public class FirstTest {
 
         int amount_of_search_results = getAmountOfElements(
                 By.xpath(search_result_locator));
+
         Assert.assertTrue(
                 "We found too few results",
                 amount_of_search_results > 0);
@@ -667,6 +667,41 @@ public class FirstTest {
                 30);
     }
 
+    @Test
+    public void testArticleHasTitle() {
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "Cannot find skip button on start page",
+                10);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Cannot find 'Search Wikipedia' input",
+                5);
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_container"),
+                "Appium",
+                "Cannot find search input",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//*[@text='Automation for Apps']"),
+                "Cannot find 'Automation for Apps' topic searching by 'Appium'",
+                30);
+
+        String title_of_article = "//android.widget.TextView[@text='Appium']";
+        String title = "Appium";
+
+        assertElementPresent(
+                By.xpath(title_of_article),
+                "text",
+                title,
+                "Cannot find title " + title + " of article",
+                10);
+    }
+
 
 
 
@@ -719,15 +754,13 @@ public class FirstTest {
     }
 
 
-    private List<WebElement> findElements(By by)
-    {
+    private List<WebElement> findElements(By by) {
         return driver.findElements(by);
     }
 
-    protected void swipeUp(int timeOfSwipe)
-    {
+    protected void swipeUp(int timeOfSwipe) {
         TouchAction action = new TouchAction(driver);
-        Dimension size =  driver.manage().window().getSize();
+        Dimension size = driver.manage().window().getSize();
         int x = size.width / 2;
         int start_y = (int) (size.height * 0.8);
         int end_y = (int) (size.height * 0.2);
@@ -738,14 +771,12 @@ public class FirstTest {
                 .release()
                 .perform();
     }
-    protected void swipeUpQuick()
-    {
+
+    protected void swipeUpQuick() {
         swipeUp(200);
     }
 
-    protected void swipeUpToFindElement(By by, String error_message, int max_swipes)
-
-    {
+    protected void swipeUpToFindElement(By by, String error_message, int max_swipes) {
         int already_swiped = 0;
         while (driver.findElements(by).size() == 0) {
             if (already_swiped > max_swipes) {
@@ -758,12 +789,12 @@ public class FirstTest {
     }
 
     protected void swipeElementToLeft(By by, String error_message) {
-       WebElement element = waitForElementPresent(by, error_message, 10);
-       int left_x = element.getLocation().getX();
-       int right_x = left_x + element.getSize().getWidth();
-       int upper_y = element.getLocation().getY();
-       int lower_y = upper_y + element.getSize().getHeight();
-       int middle_y = (upper_y + lower_y) / 2;
+        WebElement element = waitForElementPresent(by, error_message, 10);
+        int left_x = element.getLocation().getX();
+        int right_x = left_x + element.getSize().getWidth();
+        int upper_y = element.getLocation().getY();
+        int lower_y = upper_y + element.getSize().getHeight();
+        int middle_y = (upper_y + lower_y) / 2;
 
         TouchAction action = new TouchAction(driver);
         action
@@ -787,7 +818,39 @@ public class FirstTest {
         }
     }
 
-    private String waitForElementAndGetAttribute(By by, String attribute, String error_message, long timeoutInSeconds) {
+    private void assertElementPresent(By by, String attribute, String title, String error_message, long timeoutInSeconds) {
+        String default_message = "An element '" + by.toString() + "' supposed to be present";
+        String element = waitForElementAndGetAttribute(by, attribute, error_message, timeoutInSeconds);
+
+        if (!element.contains(title)) {
+            fail(default_message + " " + error_message);
+        }
+    }
+
+
+    public WebElement findElement(By locator) {
+        return driver.findElement(locator);
+    }
+
+    public static void fail(String message) {
+        if (null == message) {
+            message = "";
+        }
+        throw new AssertionError(message);
+    }
+
+    public static void assertTrue(String message, boolean condition) {
+        if (!condition) {
+            fail(message);
+        }
+    }
+
+    public static void assertTrue(boolean condition) {
+        assertTrue((String)null, condition);
+    }
+
+    private String waitForElementAndGetAttribute(By by, String attribute, String error_message,
+                                                 long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         return element.getAttribute(attribute);
     }
