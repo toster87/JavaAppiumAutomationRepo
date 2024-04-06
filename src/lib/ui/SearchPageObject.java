@@ -1,6 +1,10 @@
 package lib.ui;
 import io.appium.java_client.AppiumDriver;
+import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
 
 public class SearchPageObject extends MainPageObject {
     private final static String
@@ -10,7 +14,9 @@ public class SearchPageObject extends MainPageObject {
     SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[@text='{SUBSTRING}']",
     SEARCH_RESULT_ELEMENT = "//*[@resource-id='org.wikipedia:id/page_list_item_title']",
     SEARCH_EMPTY_RESUL_ELEMENT = "//*[@text='No results']",
-    SEARCH_SKIP_BUTTON = "org.wikipedia:id/fragment_onboarding_skip_button";
+    SEARCH_SKIP_BUTTON = "org.wikipedia:id/fragment_onboarding_skip_button",
+    SEARCH_INPUT_TEXT = "org.wikipedia:id/search_src_text";
+
      public SearchPageObject(AppiumDriver driver) {
          super(driver);
      }
@@ -22,7 +28,7 @@ public class SearchPageObject extends MainPageObject {
     /*TEMPLATES METHODS*/
     public void initSearchInput() {
         this.waitForElementPresent(By.id(SEARCH_INIT_ELEMENT), "Cannot find search input after clicking search init element");
-        this.waitForElementAndClick(By.id(SEARCH_INIT_ELEMENT), "Cannot find and click search init element", 5);
+        this.waitForElementAndClick(By.id(SEARCH_INIT_ELEMENT), "Cannot find and click search init element", 10);
     }
 
     public void clickSkipButton() {
@@ -56,8 +62,7 @@ public class SearchPageObject extends MainPageObject {
 
     public int getAmountOfSearchArticles() {
         this.waitForElementPresent(By.xpath(SEARCH_RESULT_ELEMENT), "Cannot find anything by the request", 15);
-
-       return this.getAmountOfElements(By.xpath(SEARCH_RESULT_ELEMENT));
+        return this.getAmountOfElements(By.xpath(SEARCH_RESULT_ELEMENT));
     }
 
     public void waitForEmptyResultsLabel() {
@@ -66,5 +71,41 @@ public class SearchPageObject extends MainPageObject {
 
     public void assertThereIsNoResultOfSearch() {
         this.assertElementNotPresent(By.xpath(SEARCH_RESULT_ELEMENT), "We supposed not to find any results by request");
+    }
+
+    public void waitForAppearOfResultsOfSearch() {
+        this.waitForElementPresent(By.xpath(SEARCH_RESULT_ELEMENT), "We supposed to find any results by request", 20);
+    }
+
+    public void waitForDisappearOfResultsOfSearch() {
+        this.waitForElementNotPresent(By.xpath(SEARCH_RESULT_ELEMENT), "Search results are still present on page", 10);
+    }
+
+    public WebElement waitForSearchInputText() {
+        return this.waitForElementPresent(By.id(SEARCH_INPUT_TEXT), "Cannot find search input text", 10);
+    }
+
+    public void clearSearchInputAndTypeSearchLine(String search_line) {
+        this.waitForElementAndClear(By.id(SEARCH_INPUT_TEXT), "Cannot find and clear search input text", 10);
+        this.waitForElementAndSendKeys(By.id(SEARCH_INPUT_TEXT), search_line, "Cannot find and type into search input", 5);
+    }
+
+    public void assertSearchInputHasText(String value) {
+        WebElement text_element = waitForSearchInputText();
+        String inputText = text_element.getAttribute("text");
+        this.assertElementHasText("Cannot find input text", value, inputText);
+    }
+
+    public void assertSearchResultsHaveText(String text) {
+        boolean found = false;
+        List<WebElement> searchResults = findElements(By.xpath(SEARCH_RESULT_ELEMENT));
+        for (WebElement webElement : searchResults) {
+            if (webElement.getText().contains(text)) {
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+            Assert.fail("Search results have no text " + text);
     }
 }

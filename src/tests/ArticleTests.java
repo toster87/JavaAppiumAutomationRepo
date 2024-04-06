@@ -3,6 +3,7 @@ import lib.CoreTestCase;
 import lib.ui.ArticlePageObject;
 import lib.ui.SearchPageObject;
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 public class ArticleTests extends CoreTestCase  {
 
@@ -35,5 +36,19 @@ public class ArticleTests extends CoreTestCase  {
         SearchPageObject.clickByArticleWithSubstring("Automation for Apps");
         ArticlePageObject.waitForTitleElement("Automation for Apps");
         ArticlePageObject.swipeToFooter();
+    }
+
+    @Test
+    public void testArticleHasTitle() {
+
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
+        SearchPageObject.clickSkipButton();
+        SearchPageObject.initSearchInput();
+        SearchPageObject.typeSearchLine("Appium");
+        SearchPageObject.clickByArticleWithSubstring("Automation for Apps");
+        ArticlePageObject.waitForTitleElement("Appium");
+        String title = "Appium";
+        ArticlePageObject.assertArticleHasTitle("Appium", title);
     }
 }

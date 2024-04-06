@@ -8,15 +8,16 @@ public class ArticlePageObject extends MainPageObject {
     public ArticlePageObject(AppiumDriver driver) {
         super(driver);
     }
+
     private final static String
             TITLE = "//android.widget.TextView[@text='{SUBSTRING}']",
             FOOTER_ELEMENT = "//android.widget.TextView[@text='View article in browser']",
-    OPTIONS_BUTTON = "org.wikipedia:id/page_save",
-    ADD_TO_MY_LIST_BUTTON = "//android.widget.Button[@text='Add to list']",
-
-    MY_LIST_NAME_INPUT = "org.wikipedia:id/text_input",
-    MY_LIST_OK_BUTTON = "//*[@text='OK']",
-    NAVIGATE_UP_BUTTON = "//android.widget.ImageButton[@content-desc='Navigate up']";
+            OPTIONS_BUTTON = "org.wikipedia:id/page_save",
+            ADD_TO_MY_LIST_BUTTON = "//android.widget.Button[@text='Add to list']",
+            MY_LIST_NAME_INPUT = "org.wikipedia:id/text_input",
+            MY_LIST_OK_BUTTON = "//*[@text='OK']",
+            NAVIGATE_UP_BUTTON = "//android.widget.ImageButton[@content-desc='Navigate up']",
+            CREATED_FOLDER = "//*[@text='{SUBSTRING}']";
 
 
     public WebElement waitForTitleElement(String substring) {
@@ -33,9 +34,18 @@ public class ArticlePageObject extends MainPageObject {
         return TITLE.replace("{SUBSTRING}", substring);
     }
 
+    private static String getNameOfFolderInMyList(String substring) {
+        return CREATED_FOLDER.replace("{SUBSTRING}", substring);
+    }
+
+    public void waitForNameOfFolderElementAndClick(String substring) {
+        String name_of_folder = getNameOfFolderInMyList(substring);
+        this.waitForElementAndClick(By.xpath(name_of_folder), "Cannot find name of folder", 15);
+    }
+
     public void swipeToFooter() {
         this.swipeUpToFindElement(
-                By.xpath( FOOTER_ELEMENT),
+                By.xpath(FOOTER_ELEMENT),
                 "Cannontd the end of article",
                 20);
     }
@@ -74,5 +84,24 @@ public class ArticlePageObject extends MainPageObject {
                 By.xpath(NAVIGATE_UP_BUTTON),
                 "Cannot close article",
                 5);
+    }
+
+    public void addArticleToCreatedFolder(String name_of_folder) {
+        this.waitForElementAndClick(
+                By.id(OPTIONS_BUTTON),
+                "Cannot find option button to save article",
+                5);
+
+        this.waitForElementAndClick(
+                By.xpath(ADD_TO_MY_LIST_BUTTON),
+                "Cannot find button to save article",
+                5);
+
+        this.waitForNameOfFolderElementAndClick(name_of_folder);
+    }
+
+    public void assertArticleHasTitle(String substring, String title) {
+        String title_of_article = getTitleOfArticle(substring);
+        this.assertElementPresent(By.xpath(title_of_article), "text", title, "Cannot find title " + title + " of article", 10);
     }
 }

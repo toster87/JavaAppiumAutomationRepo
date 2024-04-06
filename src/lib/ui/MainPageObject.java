@@ -124,18 +124,7 @@ public class MainPageObject {
         }
     }
 
-    public void verifySearchResultsHaveText(String text) {
-        boolean found = false;
-        List<WebElement> searchResults = findElements(By.id("org.wikipedia:id/page_list_item_title"));
-        for (WebElement webElement : searchResults) {
-            if (webElement.getText().contains(text)) {
-                found = true;
-                break;
-            }
-        }
-        if (!found)
-            Assert.fail("Search results have no text " + text);
-    }
+
 
     public String waitForElementAndGetAttribute(By by, String attribute, String error_message,
                                                  long timeoutInSeconds) {
