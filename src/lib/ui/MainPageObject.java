@@ -124,8 +124,6 @@ public class MainPageObject {
         }
     }
 
-
-
     public String waitForElementAndGetAttribute(By by, String attribute, String error_message,
                                                  long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);

@@ -10,8 +10,9 @@ public class ArticlePageObject extends MainPageObject {
     }
 
     private final static String
-            TITLE = "//android.widget.TextView[@text='{SUBSTRING}']",
-            FOOTER_ELEMENT = "//android.widget.TextView[@text='View article in browser']",
+            TITLE = "//android.widget.TextView[1][@text='{SUBSTRING}']",
+            DESCRIPTION = "//android.widget.TextView[2][@text='{SUBSTRING}']",
+            FOOTER_ELEMENT = "//android.view.View[@content-desc='View article in browser']/android.widget.TextView",
             OPTIONS_BUTTON = "org.wikipedia:id/page_save",
             ADD_TO_MY_LIST_BUTTON = "//android.widget.Button[@text='Add to list']",
             MY_LIST_NAME_INPUT = "org.wikipedia:id/text_input",
@@ -34,6 +35,20 @@ public class ArticlePageObject extends MainPageObject {
         return TITLE.replace("{SUBSTRING}", substring);
     }
 
+    private static String getDescriptionOfArticle(String substring) {
+        return DESCRIPTION.replace("{SUBSTRING}", substring);
+    }
+
+    public WebElement waitForDescriptionElement(String substring) {
+        String description_of_article = getDescriptionOfArticle(substring);
+        return this.waitForElementPresent(By.xpath(description_of_article), "Cannot find description of article on page", 15);
+    }
+
+    public String getArticleDescription(String substring) {
+        WebElement description_of_article = waitForDescriptionElement(substring);
+        return description_of_article.getAttribute("text");
+    }
+
     private static String getNameOfFolderInMyList(String substring) {
         return CREATED_FOLDER.replace("{SUBSTRING}", substring);
     }
@@ -46,7 +61,7 @@ public class ArticlePageObject extends MainPageObject {
     public void swipeToFooter() {
         this.swipeUpToFindElement(
                 By.xpath(FOOTER_ELEMENT),
-                "Cannontd the end of article",
+                "Cannot find the end of article",
                 20);
     }
 
@@ -104,4 +119,5 @@ public class ArticlePageObject extends MainPageObject {
         String title_of_article = getTitleOfArticle(substring);
         this.assertElementPresent(By.xpath(title_of_article), "text", title, "Cannot find title " + title + " of article", 10);
     }
+
 }
