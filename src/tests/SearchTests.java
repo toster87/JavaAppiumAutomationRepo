@@ -1,6 +1,7 @@
 package tests;
 import lib.CoreTestCase;
 import lib.ui.SearchPageObject;
+import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -8,19 +9,17 @@ public class SearchTests extends CoreTestCase {
 
     @Test
     public void testSearch() {
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
-        SearchPageObject.clickSkipButton();
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
-        SearchPageObject.waitForSearchResult("Object-oriented programming language");
+        SearchPageObject.waitForSearchResult("Java (programming language)");
     }
 
     @Test
     public void testCancelSearch() {
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
-        SearchPageObject.clickSkipButton();
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
         SearchPageObject.waitForCancelButtonToAppear();
@@ -33,8 +32,7 @@ public class SearchTests extends CoreTestCase {
 
         String search_line = "Linkin Park discography";
 
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
-        SearchPageObject.clickSkipButton();
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine(search_line);
         int amount_of_search_results = SearchPageObject.getAmountOfSearchArticles();
@@ -49,8 +47,7 @@ public class SearchTests extends CoreTestCase {
 
         String search_line = "zxcvafqwer";
 
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
-        SearchPageObject.clickSkipButton();
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine(search_line);
         SearchPageObject.waitForEmptyResultsLabel();
@@ -59,18 +56,16 @@ public class SearchTests extends CoreTestCase {
 
     @Test
     public void testSearchInputText() {
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
-        SearchPageObject.clickSkipButton();
         SearchPageObject.initSearchInput();
         SearchPageObject.assertSearchInputHasText("Search Wikipedia");
     }
 
     @Test
     public void testCLearSearchResults() {
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
-        SearchPageObject.clickSkipButton();
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
         SearchPageObject.waitForAppearOfResultsOfSearch();
@@ -81,22 +76,20 @@ public class SearchTests extends CoreTestCase {
 
     @Test
     public void testSearchResultsHaveText() {
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
-        SearchPageObject.clickSkipButton();
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
         SearchPageObject.waitForAppearOfResultsOfSearch();
-        SearchPageObject.assertSearchResultsHaveText("Java");
+        SearchPageObject.assertSearchResultsHaveText("Java (programming language)");
     }
 
     @Test
     public void testTitleAndDescriptionInSearchResults() {
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
         String articleTitle = "Java (programming language)";
         String articleDescription = "Object-oriented programming language";
 
-        SearchPageObject.clickSkipButton();
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
         SearchPageObject.waitForAppearOfResultsOfSearch();

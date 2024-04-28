@@ -1,6 +1,10 @@
 package tests;
 import lib.CoreTestCase;
 import lib.ui.*;
+import lib.ui.factories.ArticlePageObjectFactory;
+import lib.ui.factories.MyListsPageObjectFactory;
+import lib.ui.factories.NavigationUiFactory;
+import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Test;
 
 
@@ -10,21 +14,31 @@ public class MyListsTests extends CoreTestCase  {
 
         String name_of_folder = "Learning programming";
 
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
-        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
-        NavigationUI NavigationUI = new NavigationUI(driver);
-        MyListsPageObject MyListsPageObject = new MyListsPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
+        ArticlePageObject ArticlePageObject = ArticlePageObjectFactory.get(driver);
+        NavigationUI NavigationUI = NavigationUiFactory.get(driver);
+        MyListsPageObject MyListsPageObject = MyListsPageObjectFactory.get(driver);
 
-        SearchPageObject.clickSkipButton();
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
         SearchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
         String article_title = ArticlePageObject.getArticleTitle("Java (programming language)");
-        ArticlePageObject.addArticleToMyList(name_of_folder);
+        if (Platform.getInstance().isAndroid()) {
+            ArticlePageObject.addArticleToMyList(name_of_folder);
+        } else {
+            ArticlePageObject.addArticlesToMySaved();
+        }
+
         ArticlePageObject.closeArticle();
-        ArticlePageObject.closeArticle();
+        if (Platform.getInstance().isAndroid()) {
+            ArticlePageObject.closeArticle();
+        } else {
+            ArticlePageObject.clickCancel();
+        }
         NavigationUI.clickMyList();
+        if(Platform.getInstance().isAndroid()) {
         MyListsPageObject.openFolderByName(name_of_folder);
+        }
         MyListsPageObject.swipeByArticleToDelete(article_title);
     }
 
@@ -32,31 +46,55 @@ public class MyListsTests extends CoreTestCase  {
     public void testSaveTwoArticlesToMyList() {
 
         String name_of_folder = "Learning programming";
+        String articleTitle = "Appium";
+        String articleDescription = "Automation for Apps";
 
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
-        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
-        NavigationUI NavigationUI = new NavigationUI(driver);
-        MyListsPageObject MyListsPageObject = new MyListsPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
+        ArticlePageObject ArticlePageObject = ArticlePageObjectFactory.get(driver);
+        NavigationUI NavigationUI = NavigationUiFactory.get(driver);
+        MyListsPageObject MyListsPageObject = MyListsPageObjectFactory.get(driver);
 
-        SearchPageObject.clickSkipButton();
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
         SearchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
-        ArticlePageObject.waitForTitleElement("Java");
-        ArticlePageObject.addArticleToMyList(name_of_folder);
+        ArticlePageObject.waitForTitleElement("Java (programming language)");
+
+        if (Platform.getInstance().isAndroid()) {
+            ArticlePageObject.addArticleToMyList(name_of_folder);
+        } else {
+            ArticlePageObject.addArticlesToMySaved();
+        }
+
         ArticlePageObject.closeArticle();
+        if (Platform.getInstance().isAndroid()) {
+            ArticlePageObject.closeArticle();
+        }
 
         //Second article
         SearchPageObject.clearSearchInputAndTypeSearchLine("Appium");
         SearchPageObject.clickByArticleWithSubstring("Automation for Apps");
         ArticlePageObject.waitForTitleElement("Appium");
+        if (Platform.getInstance().isAndroid()) {
         ArticlePageObject.addArticleToCreatedFolder(name_of_folder);
+        } else {
+            ArticlePageObject.addArticlesToMySaved();
+        }
         ArticlePageObject.closeArticle();
-        ArticlePageObject.closeArticle();
+        if (Platform.getInstance().isAndroid()) {
+            ArticlePageObject.closeArticle();
+        } else {
+            ArticlePageObject.clickCancel();
+        }
+
         NavigationUI.clickMyList();
-        MyListsPageObject.openFolderByName(name_of_folder);
+        if(Platform.getInstance().isAndroid()) {
+            MyListsPageObject.openFolderByName(name_of_folder);
+        }
         MyListsPageObject.swipeByArticleToDelete("Java (programming language)");
-        SearchPageObject.clickByArticleWithSubstring("Automation for Apps");
-        ArticlePageObject.waitForTitleElement("Appium");
+        SearchPageObject.waitForElementByTitleAndDescription(articleTitle, articleDescription);
+
+//        SearchPageObject.clickByArticleWithSubstring("Automation for Apps");
+//        ArticlePageObject.waitForTitleElement("Appium");
+
     }
 }

@@ -6,17 +6,17 @@ import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
-public class SearchPageObject extends MainPageObject {
-    private final static String
-    SEARCH_INIT_ELEMENT = "id:org.wikipedia:id/search_container",
-    SEARCH_INPUT = "id:org.wikipedia:id/search_src_text",
-    SEARCH_CANCEL_BUTTON = "id:org.wikipedia:id/search_close_btn",
-    SEARCH_RESULT_BY_SUBSTRING_TPL = "xpath://*[@text='{SUBSTRING}']",
-    SEARCH_TITLE_AND_DESCRIPTION_RESULT_BY_SUBSTRING_TPL = "xpath://android.widget.TextView[@text='{SUBSTRING}']",
-    SEARCH_RESULT_ELEMENT = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_title']",
-    SEARCH_EMPTY_RESULT_ELEMENT = "xpath://*[@text='No results']",
-    SEARCH_SKIP_BUTTON = "id:org.wikipedia:id/fragment_onboarding_skip_button",
-    SEARCH_INPUT_TEXT = "id:org.wikipedia:id/search_src_text";
+abstract public class SearchPageObject extends MainPageObject {
+    protected static String
+    SEARCH_INIT_ELEMENT,
+    SEARCH_INPUT,
+    SEARCH_CANCEL_BUTTON,
+    SEARCH_RESULT_BY_SUBSTRING_TPL,
+    SEARCH_TITLE_AND_DESCRIPTION_RESULT_BY_SUBSTRING_TPL,
+    SEARCH_RESULT_ELEMENT,
+    SEARCH_EMPTY_RESULT_ELEMENT,
+    SEARCH_SKIP_BUTTON,
+    SEARCH_INPUT_TEXT;
 
      public SearchPageObject(AppiumDriver driver) {
          super(driver);
@@ -34,10 +34,6 @@ public class SearchPageObject extends MainPageObject {
     public void initSearchInput() {
         this.waitForElementPresent(SEARCH_INIT_ELEMENT, "Cannot find search input after clicking search init element");
         this.waitForElementAndClick(SEARCH_INIT_ELEMENT, "Cannot find and click search init element", 30);
-    }
-
-    public void clickSkipButton() {
-        this.waitForElementAndClick(SEARCH_SKIP_BUTTON, "Cannot find and click skip button", 5);
     }
     public void waitForCancelButtonToAppear() {
         this.waitForElementPresent(SEARCH_CANCEL_BUTTON, "Cannot find search cancel button", 5);
@@ -70,7 +66,7 @@ public class SearchPageObject extends MainPageObject {
 
     public void clickByArticleWithSubstring(String substring) {
         String search_result_xpath = getResultSearchElement(substring);
-        this.waitForElementAndClick(search_result_xpath, "Cannot find and click search result with substring " + substring, 40);
+        this.waitForElementAndClick(search_result_xpath, "Cannot find and click search result with substring " + substring, 25);
     }
 
     public int getAmountOfSearchArticles() {
@@ -120,5 +116,9 @@ public class SearchPageObject extends MainPageObject {
         }
         if (!found)
             Assert.fail("Search results have no text " + text);
+    }
+
+    public void clickSkip() {
+        this.waitForElementAndClick(SEARCH_SKIP_BUTTON, "Cannot find and click skip button", 5);
     }
 }

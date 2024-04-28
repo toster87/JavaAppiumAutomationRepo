@@ -1,29 +1,27 @@
 package lib;
-
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.android.AndroidDriver;
 import junit.framework.TestCase;
+import lib.ui.SearchPageObject;
+import lib.ui.WelcomePageObject;
+import lib.ui.factories.SearchPageObjectFactory;
 import org.openqa.selenium.ScreenOrientation;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
-import java.net.URL;
 import java.time.Duration;
 
 public class CoreTestCase extends TestCase {
 
-    private static String PLATFORM_IOS = "ios";
-    private static String PLATFORM_ANDROID = "android";
+    private static final String PLATFORM_IOS = "ios";
+    private static final String PLATFORM_ANDROID = "android";
 
     protected AppiumDriver driver;
-    private static String AppiumURL = "http://127.0.0.1:4723/";
+    protected Platform Platform;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-
-        DesiredCapabilities capabilities = this.getCapabilitiesByPlatformEnv();
-        driver = new AndroidDriver(new URL(AppiumURL), capabilities);
+        driver = Platform.getInstance().getDriver();
         this.rotateScreenPortrait();
+        this.skipWelcomePage();
     }
 
     @Override
@@ -44,30 +42,8 @@ public class CoreTestCase extends TestCase {
         driver.runAppInBackground(Duration.ofSeconds(seconds));
     }
 
-    private DesiredCapabilities getCapabilitiesByPlatformEnv() throws Exception {
-        String platform = System.getenv("PLATFORM");
-
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-
-        if (platform.equals(PLATFORM_ANDROID)) {
-            capabilities.setCapability("platformName", "Android");
-            capabilities.setCapability("deviceName", "AndroidTestDevice");
-            capabilities.setCapability("platformVersion", "8.1");
-            capabilities.setCapability("automationName", "UiAutomator2");
-            capabilities.setCapability("appPackage", "org.wikipedia");
-            capabilities.setCapability("appActivity", ".main.MainActivity");
-            capabilities.setCapability("app", "/Users/legai/Documents/GitHub/JavaAppiumAutomation/apks/org.wikipedia.apk");
-        } else if (platform.equals(PLATFORM_IOS)) {
-
-            capabilities.setCapability("platformName", "iOS");
-            capabilities.setCapability("deviceName", "iPhone SE (3rd generation)");
-            capabilities.setCapability("platformVersion", "17.2");
-            capabilities.setCapability("automationName", "xcuitest");
-            capabilities.setCapability("app", "/Users/legai/Documents/GitHub/JavaAppiumAutomation/apks/Wikipedia.app");
-        } else {
-            throw new Exception("Cannot run platform from env variable. Platform name " + platform);
-        }
-
-        return capabilities;
+    private void skipWelcomePage() {
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
+        SearchPageObject.clickSkip();
     }
 }

@@ -3,6 +3,8 @@ package lib.ui;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
 
+import static lib.ui.SearchPageObject.SEARCH_SKIP_BUTTON;
+
 public class WelcomePageObject extends MainPageObject {
 
     private final static String
@@ -40,4 +42,5 @@ public class WelcomePageObject extends MainPageObject {
     public void clickNextButton() {
         this.waitForElementAndClick(NEXT_LINK, "Cannot find and click Next button", 15);
     }
+
 }
