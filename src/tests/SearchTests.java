@@ -95,4 +95,19 @@ public class SearchTests extends CoreTestCase {
         SearchPageObject.waitForAppearOfResultsOfSearch();
         SearchPageObject.waitForElementByTitleAndDescription(articleTitle, articleDescription);
     }
+
+    @Test
+    public void testAmountOfSearchResults() {
+
+        String search_line = "Linkin Park discography";
+
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
+        SearchPageObject.initSearchInput();
+        SearchPageObject.typeSearchLine(search_line);
+        int amount_of_search_results = SearchPageObject.getAmountOfSearchArticles();
+
+        assertTrue(
+                "We found too few results",
+                amount_of_search_results > 3);
+    }
 }
